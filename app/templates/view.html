@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Résultats</title>
+    <!-- Lien Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .url-column {
+            max-width: 200px; /* Limite la largeur à 200 pixels */
+            overflow: hidden; /* Cache le texte qui dépasse */
+            text-overflow: ellipsis; /* Ajoute des points de suspension (...) pour le texte qui déborde */
+            white-space: nowrap; /* Empêche le texte de passer à la ligne suivante */
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Résultats du Scraping</h1>
+        <a href="{{ url_for('main.export', data=data|tojson) }}" class="btn btn-success mt-3">Exporter en CSV</a>
+        <a href="{{ url_for('main.home') }}" class="btn btn-primary mt-3">Retour</a>
+
+        <!-- Tableau des résultats -->
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">Nom Google</th>
+                    <th scope="col">Adresse</th>
+                    <th scope="col">Numéro de téléphone</th>
+                    <th scope="col" class="url-column">URL scrappée</th>
+                    <th scope="col" class="url-column">URL du lien</th>
+                    <th scope="col">Lundi</th>
+                    <th scope="col">Mardi</th>
+                    <th scope="col">Mercredi</th>
+                    <th scope="col">Jeudi</th>
+                    <th scope="col">Vendredi</th>
+                    <th scope="col">Samedi</th>
+                    <th scope="col">Dimanche</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if data %}
+                    {% for entry in data %}
+                        <tr>
+                            <td>{{ entry['Nom Google'] }}</td>
+                            <td>{{ entry['Adresse'] }}</td>
+                            <td>{{ entry['Numéro de téléphone'] }}</td>
+                            <td class="url-column"><a href="{{ entry['URL'] }}" target="_blank">{{ entry['URL'] }}</a></td>
+                            <td class="url-column"><a href="{{ entry['URL du lien'] }}" target="_blank">{{ entry['URL du lien'] }}</a></td>
+                            <td class="horaire">
+                                {% for horaire in entry['Horaires'] if horaire['Jour'] == 'lundi' %}
+                                    {{ horaire['Horaires'] }}
+                                {% endfor %}
+                            </td>
+                            <td class="horaire">
+                                {% for horaire in entry['Horaires'] if horaire['Jour'] == 'mardi' %}
+                                    {{ horaire['Horaires'] }}
+                                {% endfor %}
+                            </td>
+                            <td class="horaire">
+                                {% for horaire in entry['Horaires'] if horaire['Jour'] == 'mercredi' %}
+                                    {{ horaire['Horaires'] }}
+                                {% endfor %}
+                            </td>
+                            <td class="horaire">
+                                {% for horaire in entry['Horaires'] if horaire['Jour'] == 'jeudi' %}
+                                    {{ horaire['Horaires'] }}
+                                {% endfor %}
+                            </td>
+                            <td class="horaire">
+                                {% for horaire in entry['Horaires'] if horaire['Jour'] == 'vendredi' %}
+                                    {{ horaire['Horaires'] }}
+                                {% endfor %}
+                            </td>
+                            <td class="horaire">
+                                {% for horaire in entry['Horaires'] if horaire['Jour'] == 'samedi' %}
+                                    {{ horaire['Horaires'] }}
+                                {% endfor %}
+                            </td>
+                            <td class="horaire">
+                                {% for horaire in entry['Horaires'] if horaire['Jour'] == 'dimanche' %}
+                                    {{ horaire['Horaires'] }}
+                                {% endfor %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="12">Aucune donnée trouvée.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <nav aria-label="Pagination">
+            <ul class="pagination">
+                <!-- Lien pour la page précédente -->
+                {% if page > 1 %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('main.view_csv', page=page-1) }}">Précédent</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#">Précédent</a>
+                    </li>
+                {% endif %}
+
+                <!-- Lien pour chaque page -->
+                {% for p in range(1, total_pages + 1) %}
+                    <li class="page-item {% if p == page %}active{% endif %}">
+                        <a class="page-link" href="{{ url_for('main.view_csv', page=p) }}">{{ p }}</a>
+                    </li>
+                {% endfor %}
+
+                <!-- Lien pour la page suivante -->
+                {% if page < total_pages %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('main.view_csv', page=page+1) }}">Suivant</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#">Suivant</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+
+        <a href="{{ url_for('main.home') }}" class="btn btn-primary mt-3">Retour</a>
+    </div>
+
+    <!-- Lien JavaScript Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

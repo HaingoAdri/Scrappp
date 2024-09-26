@@ -1,0 +1,78 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+
+# Configurer les options de Chrome
+chrome_options = Options()
+chrome_options.add_argument("--headless")
+
+# Initialiser le WebDriver
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+
+# URL de la recherche Google
+url = 'https://www.google.com/search?q=Columbus+Caf%C3%A9+%26+Co+Compi%C3%A8gne&stick=H4sIAAAAAAAA_-NgU1I1qDAxTzVPMTdOTDExTTI1MTW2MqhINDSyNDMzS7QwNUozNTROWcQq55yfU5qbVFqs4JyYdnilgpqCcz4Q5RZkHl6RnpcKAIFJqylKAAAA&hl=fr&mat=CWC-I9C3xdFUElcBEKoLaUdHgZnZuCxxQLLvd32bFHwVAtOGz9g5O7g3OlZqmWCrfaGALYqGJh1wwuk1RZzbOdknxQbPSTCub5rgJgjBGGYha5coquhz71zM1bPLamIp9HE&authuser=0'
+
+# Charger la page
+driver.get(url)
+
+# Attendre que les éléments soient visibles
+wait = WebDriverWait(driver, 10)
+
+try:
+    # Trouver la div avec la classe 'PZPZlf ssJ7i xgAzOe' et récupérer le texte
+    try:
+        div_element = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, '.PZPZlf.ssJ7i.xgAzOe')))
+        div_text = div_element.text
+        print("Nom Google :", div_text)
+    except Exception:
+        print("Nom Google non trouvé")
+    
+    # Trouver le span avec la classe 'LrzXr' et récupérer le texte
+    try:
+        span_element = wait.until(EC.visibility_of_element_located((By.CLASS_NAME, 'LrzXr')))
+        span_text = span_element.text
+        print("Adresse :", span_text)
+    except Exception:
+        print("Adresse non trouvée")
+    
+    # Essayer de trouver l'élément <a> avec l'attribut data-dtype="d3ph" (pour le numéro de téléphone)
+    try:
+        phone_link = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'a[data-dtype="d3ph"]')))
+        phone_number = phone_link.text
+        print("Numéro de téléphone :", phone_number)
+    except Exception:
+        print("Numéro de téléphone non trouvé")
+
+    try:
+        a_element = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'a.n1obkb.mI8Pwc')))
+        href = a_element.get_attribute('href')
+        print("URL du lien :", href)
+    except Exception:
+        print("Lien avec les classes 'n1obkb mI8Pwc' non trouvé")
+
+    try:
+        table = wait.until(EC.presence_of_element_located((By.XPATH, '//table[contains(@class, "WgFkxc")]')))
+
+        # Trouver toutes les lignes du tableau
+        rows = table.find_elements(By.XPATH, './/tr')
+
+        for row in rows:
+            cells = row.find_elements(By.XPATH, './/td[contains(@class, "SKNSIb")]')
+            cells2 = row.find_elements(By.XPATH, './/td[not(contains(@class, "SKNSIb"))]')
+            if len(cells) == 1 and len(cells2) == 1:
+                text = driver.execute_script("return arguments[0].innerText;", cells[0])
+                horaire = driver.execute_script("return arguments[0].innerText;", cells2[0])
+                print(f"{text} : {horaire}")
+            else:
+                print("Erreur de correspondance des cellules dans la ligne.")
+    except Exception:
+        print("Horaire non trouvés")
+
+finally:
+    # Fermer le navigateur
+    driver.quit()

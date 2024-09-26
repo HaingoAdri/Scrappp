@@ -1,0 +1,6 @@
+Flask
+selenium
+webdriver_manager
+pandas
+gspread 
+google-auth
