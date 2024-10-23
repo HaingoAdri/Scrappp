@@ -1,7 +1,6 @@
 Flask
 selenium
-webdriver_manager
+webdriver-manager==3.8.6
 pandas
 gspread 
 google-auth
-chromium-driver
