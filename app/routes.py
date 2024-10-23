@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, send_file
-from .scraper import extract_data
+from app.scraper import extract_data
 import pandas as pd
 import os
 import json
