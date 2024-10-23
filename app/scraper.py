@@ -9,7 +9,6 @@ import pandas as pd
 
 # Configuration de Selenium
 chrome_options = Options()
-chrome_options.binary_location = "/usr/bin/chromium-browser"
 chrome_options.add_argument("--headless")
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
