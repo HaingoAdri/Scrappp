@@ -1,6 +1,4 @@
 Flask
 pandas
 gspread 
-google-auth
-selenium==4.10.0
-webdriver-manager==3.8.6
+playwright
