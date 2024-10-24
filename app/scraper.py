@@ -1,16 +1,14 @@
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
 
 # Configuration de Selenium
 chrome_options = Options()
 chrome_options.add_argument("--headless")
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+driver = webdriver.Chrome(options=chrome_options)
 
 def extract_data(url):
     info = {'URL': url}
