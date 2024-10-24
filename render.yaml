@@ -1,6 +1,18 @@
+version: 1
 services:
-  - type: web
-    name: scrappp
+  web:
+    type: web_service
+    name: your_service_name
     env: python
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "./start.sh"
+    plan: free
+    buildCommand: |
+      pip install Flask
+      pip install pandas
+      pip install gspread 
+      pip install playwright
+      pip install playwright
+      pip install requests
+      pip install beautifulsoup4
+    startCommand: python pl.py
+    installCommand: |
+      playwright install
