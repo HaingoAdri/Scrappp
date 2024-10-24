@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -8,7 +9,15 @@ import pandas as pd
 # Configuration de Selenium
 chrome_options = Options()
 chrome_options.add_argument("--headless")
-driver = webdriver.Chrome(options=chrome_options)
+
+# Spécifiez le chemin du ChromeDriver ici
+chrome_driver_path = "/Users/eva_smartelia/Documents/Scrappp/chrome/chromedriver"
+
+# Créez un service pour le ChromeDriver
+service = Service(executable_path=chrome_driver_path)
+
+# Lancez le navigateur avec le service et les options
+driver = webdriver.Chrome(service=service, options=chrome_options)
 
 def extract_data(url):
     info = {'URL': url}
